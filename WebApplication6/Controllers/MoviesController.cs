@@ -12,7 +12,7 @@ namespace WebApplication6.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MovieContext db;
@@ -44,6 +44,25 @@ namespace WebApplication6.Controllers
                 return NotFound();
             }
             var movie = await db.Movies.FindAsync(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return movie;
+        }
+
+        // GET: api/Movies1/5
+        [HttpGet]
+        [Route("GetMovieByName")]
+        public async Task<ActionResult<Movie>> GetMovieByName(string name)
+        {
+            if (db.Movies == null)
+            {
+                return NotFound();
+            }
+            var movie = db.Movies.FirstOrDefault(x => x.Title.Contains(name));
 
             if (movie == null)
             {
